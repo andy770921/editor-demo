@@ -1,4 +1,4 @@
-# react vite test boilerplate
+# Editor Demo
 
 ## Packages
 
