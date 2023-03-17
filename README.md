@@ -3,6 +3,8 @@
 ## Packages
 
 - [Vite](https://vitejs.dev/guide/why.html)
+- [Vitest](https://vitest.dev/guide/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - [Eslint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
 
@@ -97,6 +99,49 @@ npm i -D prettier eslint-config-prettier eslint-plugin-prettier
 }
 ```
 
+11. Install test packages [explained here](https://pjchender.dev/npm/note-vite-vitest/).
+
+```
+npm install --save-dev vitest jsdom
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+```
+
+12. Modify `vite.config.ts`.
+
+```ts
+/// <reference types="vitest" />
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import eslint from 'vite-plugin-eslint';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react(), eslint()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: 'src/setupTests.ts',
+  },
+});
+```
+
+13. Add `src/setupTests.ts`.
+
+```ts
+import '@testing-library/jest-dom';
+```
+
+14. Modify `tsconfig.json`.
+
+```json
+{
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  }
+}
+```
+
 ## Available Scripts
 
 ### `npm run dev`, `npm run build`, `npm run preview`
@@ -110,3 +155,7 @@ Check lint.
 ### `npm run format`
 
 Adjust format and save.
+
+### `npm run test`, `npm run coverage`
+
+Command line Offered by [Vitest](https://vitest.dev/guide/#command-line-interface).
