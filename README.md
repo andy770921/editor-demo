@@ -1,4 +1,4 @@
-# react vite boilerplate
+# react vite test boilerplate
 
 ## Packages
 
