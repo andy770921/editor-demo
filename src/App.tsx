@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import LeftPanel from './LeftPanel';
-import Canvas from './Canvas';
-import RightPanel from './RightPanel';
+import LeftPanel from './modules/LeftPanel';
+import Canvas from './modules/Canvas';
+import RightPanel from './modules/RightPanel';
 
 const AppWrapper = styled.div`
   display: grid;

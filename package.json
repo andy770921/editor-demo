@@ -13,6 +13,11 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "immer": "^9.0.19",
+    "jotai": "^2.0.3",
+    "jotai-immer": "^0.2.0",
+    "lodash": "^4.17.21",
+    "polished": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^5.3.9"
@@ -20,6 +25,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
+    "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/styled-components": "^5.1.26",
