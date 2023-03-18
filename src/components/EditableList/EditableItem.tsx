@@ -54,6 +54,7 @@ const EditableItem: FC<EditableItemProps> = ({
 
   return (
     <EditableItemWrapper
+      data-testid={`editable-item-wrapper-${id}`}
       ref={ref}
       onClick={makeSingleClickHandler(id)}
       onDoubleClick={makeDoubleClickHandler(id)}

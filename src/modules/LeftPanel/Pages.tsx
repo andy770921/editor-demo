@@ -7,7 +7,7 @@ import {
   resetSelectedElementIdAtom,
   updatePageNameAtom,
 } from '../atoms';
-import EditableList, { EditConfirmParams } from './EditableList';
+import EditableList, { EditConfirmParams } from '../../components/EditableList';
 
 const PagesWrapper = styled.div`
   border-bottom: 1px solid;

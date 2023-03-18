@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { elementsAtom, selectedElementIdAtom, updateElementNameAtom } from '../atoms';
-import EditableList, { EditConfirmParams } from './EditableList';
+import EditableList, { EditConfirmParams } from '../../components/EditableList';
 
 const ElementsWrapper = styled.div``;
 
