@@ -1,18 +1,23 @@
 import { FC, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAtom, useAtomValue } from 'jotai';
-import { elementsAtom, selectedElementIdAtom } from '../atoms';
+import { DRAGGABLE_TYPE } from '../../services/reactDnd/constants';
+import { elementsAtom, selectedElementIdAtom, selectedElementPropsAtom } from '../atoms';
 import BlockList from './BlockList';
+import { useDropUpdatePosition } from '../../services/reactDnd';
 
-const CanvasWrapper = styled.div`
+const CanvasWrapper = styled.div<{ isOverDroppableArea: boolean }>`
   position: relative;
-  background: white;
   overflow: hidden;
+  background-color: ${(props) => (props.isOverDroppableArea ? '#FEFDD7' : 'white')};
 `;
 
 const Canvas: FC = () => {
   const elements = useAtomValue(elementsAtom);
   const [selectedElementId, setSelectedElementId] = useAtom(selectedElementIdAtom);
+  const [{ x: selectedElementX, y: selectedElementY }, setSelectedElementProps] =
+    useAtom(selectedElementPropsAtom);
+
   const handleBlockClick = useCallback(
     (id: string) => {
       setSelectedElementId(id);
@@ -20,29 +25,22 @@ const Canvas: FC = () => {
     [setSelectedElementId],
   );
 
+  const { isOver, dropRef } = useDropUpdatePosition({
+    accept: DRAGGABLE_TYPE.BLOCK,
+    originalX: selectedElementX,
+    originalY: selectedElementY,
+    onDropFinished: ({ nextX, nextY }) => {
+      setSelectedElementProps({ x: nextX, y: nextY });
+    },
+  });
+
   return (
-    <CanvasWrapper>
+    <CanvasWrapper ref={dropRef} isOverDroppableArea={isOver}>
       <BlockList
         elements={elements}
         selectedElementId={selectedElementId}
         onBlockClick={handleBlockClick}
       />
-      {/* {elements.map(({ id, props, children }) => (
-        <Fragment key={id}>
-          <Block
-            {...props}
-            active={id === selectedElementId}
-            onClick={() => setSelectedElementId(id)}
-          />
-          {children.length ? (
-            <Block
-              {...children.props}
-              active={id === selectedElementId}
-              onClick={() => setSelectedElementId(id)}
-            />
-          ) : null}
-        </Fragment>
-      ))} */}
     </CanvasWrapper>
   );
 };

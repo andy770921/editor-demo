@@ -21,9 +21,7 @@ const RightPanel: FC = () => {
     (updatedKey: keyof ElementProps) => (e: ChangeEvent<HTMLInputElement>) => {
       const updatedValue =
         e.currentTarget.type === 'number' ? e.currentTarget.valueAsNumber : e.currentTarget.value;
-      setSelectedElementProps({ [updatedKey]: updatedValue } as
-        | Record<keyof Omit<ElementProps, 'color'>, number>
-        | { color: string });
+      setSelectedElementProps({ [updatedKey]: updatedValue });
     };
 
   return (

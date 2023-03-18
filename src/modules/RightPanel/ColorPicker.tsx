@@ -15,6 +15,7 @@ const ColorInput = styled.input`
   width: 32px;
   height: 32px;
   border: none;
+  cursor: pointer;
 `;
 
 interface ColorPickerProps {

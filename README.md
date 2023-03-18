@@ -1,145 +1,120 @@
 # Editor Demo
 
+## Demo Link
+
 ## Packages
 
 - [Vite](https://vitejs.dev/guide/why.html)
+- [jotai](https://jotai.org/)
+- [Styled Components](https://styled-components.com/)
+- [Polished](https://polished.js.org/docs/#installation)
+- [React DnD](https://react-dnd.github.io/react-dnd/docs/overview)
+- [React Use](https://github.com/streamich/react-use)
+- [Lodash](https://lodash.com/docs/)
 - [Vitest](https://vitest.dev/guide/)
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - [Eslint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
 
-## Vite, ESLint and Prettier Installation Step:
+## Project Environment Setup:
 
-1. Install VSCode extension [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode).
+Mainly use [Vite](https://vitejs.dev/guide/why.html) tutorial. More detail steps listed [here](https://github.com/andy770921/react_vite_test_boilerplate).
 
-2. Install [Vite](https://vitejs.dev/guide/).
+## Global State Schema:
 
-```
-npm create vite@latest
-```
-
-3. Install eslint and related packages with standard configuration used by [Create React App](https://www.npmjs.com/package/eslint-config-react-app). The purpose for all packages is listed [here](https://www.robinwieruch.de/vite-eslint/).
-
-```
-npm i -D vite-plugin-eslint eslint eslint-config-react-app
-```
-
-4. Create a `.eslintrc` file with below settings
-
-```json
-{
-  "extends": ["react-app"]
-}
-```
-
-5. Add `eslint` in `vite.config.ts` file.
+- Schema
 
 ```ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import eslint from 'vite-plugin-eslint';
+// src\modules\interfaces.ts
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), eslint()],
-});
-```
+export interface Page {
+  id: string;
+  name: string;
+}
 
-6.  Install `prettier` and some relevant packages [explained here](https://prettier.io/docs/en/install.html#eslint-and-other-linters).
+export interface ElementProps {
+  x: number;
+  y: number;
+  o: number;
+  color: string;
+}
 
-```
-npm i -D prettier eslint-config-prettier eslint-plugin-prettier
-```
+export interface Element {
+  id: string;
+  pageId: string;
+  name: string;
+  props: ElementProps;
+  children: Omit<Element, 'pageId'>[];
+}
 
-7. Create `.prettierrc`.
-
-```json
-{
-  "semi": true,
-  "tabWidth": 2,
-  "printWidth": 100,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "bracketSpacing": true
+export interface IEditorConfig {
+  pages: Page[];
+  selectedPageId: string;
+  elements: Element[];
+  selectedElementId: string;
 }
 ```
 
-8. Update `.eslintrc` content with integration of prettier.
-
-```json
-{
-  "extends": ["react-app", "prettier"],
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": ["error"]
-  }
-}
-```
-
-9. Add `package.json` npm script and test if it works as expected.
-
-```json
-{
-  "scripts": {
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
-    "format": "prettier --write src/**/*.ts{,x}"
-  }
-}
-```
-
-10. Add `.vscode/settings.json`.
-
-```json
-{
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
-}
-```
-
-11. Install test packages [explained here](https://pjchender.dev/npm/note-vite-vitest/).
-
-```
-npm install --save-dev vitest jsdom
-npm install --save-dev @testing-library/react @testing-library/jest-dom
-```
-
-12. Modify `vite.config.ts`.
+- Example
 
 ```ts
-/// <reference types="vitest" />
+// src\modules\atoms.ts
 
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import eslint from 'vite-plugin-eslint';
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), eslint()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: 'src/setupTests.ts',
-  },
-});
-```
-
-13. Add `src/setupTests.ts`.
-
-```ts
-import '@testing-library/jest-dom';
-```
-
-14. Modify `tsconfig.json`.
-
-```json
-{
-  "compilerOptions": {
-    "types": ["vitest/globals"]
-  }
-}
+const defaultEditorConfig: IEditorConfig = {
+  pages: [
+    {
+      id: 'page_uuid_a',
+      name: 'page 1',
+    },
+    {
+      id: 'page_uuid_b',
+      name: 'page 2',
+    },
+  ],
+  selectedPageId: 'page_uuid_a',
+  elements: [
+    {
+      id: 'element_uuid_x',
+      pageId: 'page_uuid_a',
+      name: 'element 1',
+      props: {
+        x: 10,
+        y: 10,
+        o: 100,
+        color: '#008000',
+      },
+      children: [
+        {
+          id: 'element_uuid_m',
+          name: 'element 1-1',
+          props: {
+            x: 15,
+            y: 70,
+            o: 100,
+            color: '#A00000',
+          },
+          children: [
+            // ...
+          ],
+        },
+      ],
+    },
+    {
+      id: 'element_uuid_y',
+      pageId: 'page_uuid_a',
+      name: 'element 2',
+      props: {
+        x: 60,
+        y: 60,
+        o: 50,
+        color: '#008000',
+      },
+      children: [],
+    },
+    //...
+  ],
+  selectedElementId: 'element_uuid_x',
+};
 ```
 
 ## Available Scripts

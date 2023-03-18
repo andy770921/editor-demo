@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import LeftPanel from './modules/LeftPanel';
 import Canvas from './modules/Canvas';
 import RightPanel from './modules/RightPanel';
+import { DragDropProvider } from './services/reactDnd';
 
 const AppWrapper = styled.div`
   display: grid;
@@ -17,7 +18,9 @@ const App: FC = () => {
   return (
     <AppWrapper>
       <LeftPanel />
-      <Canvas />
+      <DragDropProvider>
+        <Canvas />
+      </DragDropProvider>
       <RightPanel />
     </AppWrapper>
   );

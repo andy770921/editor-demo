@@ -159,9 +159,8 @@ export const selectedElementPropsAtom = atom(
 
     return selectedElement?.props ?? defaultElementProps;
   },
-  (_get, _set, value: Record<keyof Omit<ElementProps, 'color'>, number> | { color: string }) => {
+  (_get, _set, value: Partial<ElementProps>) => {
     _set(editorConfigAtom, (state) => {
-      const [propsKey, propsValue] = Object.entries(value)[0];
       const selectedElementId = _get(editorConfigAtom).selectedElementId;
       const selectedElementIndexList = findTreeIndexPath(
         _get(editorConfigAtom).elements,
@@ -174,7 +173,9 @@ export const selectedElementPropsAtom = atom(
         .flatMap((index) => [index, 'children'])
         .slice(0, -1);
 
-      set(state, ['elements', ...pathSequence, 'props', propsKey], propsValue);
+      Object.entries(value).forEach(([propsKey, propsValue]) => {
+        set(state, ['elements', ...pathSequence, 'props', propsKey], propsValue);
+      });
     });
   },
 );
