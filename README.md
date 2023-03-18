@@ -18,9 +18,50 @@ https://editor-demo-sigma.vercel.app/
 - [Eslint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
 
+## Folder Structure under \src
+
+```
+┌──  components                 # Shared components
+│    └── EditableList
+│         ├── EditableItem.tsx
+│         ├── EditableName.tsx
+│         ├── index.tsx        # <EditableList /> for <Pages /> and <Elements /> usage
+│         └── index.test.tsx
+├── modules                    # Specific business logic and  compound component
+│    ├── Canvas
+│    │    ├── BlockList.tsx
+│    │    ├── DraggableBlock.tsx
+│    │    └── index.tsx        # Root of <Canvas />
+│    ├── LeftPanel
+│    │    ├── Elements.tsx
+│    │    ├── index.tsx        # Root of <LeftPanel />
+│    │    └── Pages.tsx
+│    ├── RightPanel
+│    │    ├── ColorPicker.tsx
+│    │    └── index.tsx        # Root of <RightPanel />
+│    ├──  atoms.ts             # Cross-module shared state
+│    └──  interfaces.ts        # TypeScript interface
+├── services                   # Customization for each packages
+│    ├── reactDnd              # Third-party lib for drag and drop
+│    │    ├── constants.ts
+│    │    ├── contexts.tsx
+│    │    ├── hooks.ts
+│    │    └── index.tsx        # Root of all DnD exported items
+│    └──  testingLibrary
+│         └── index.tsx        # Global import for all test file
+├── utils                      # Utility functions
+│    ├── array.ts              # Array utility functions
+│    └── array.test.ts
+├── App.tsx                    # Root of overall layout
+├── main.tsx                   # Root of ReactDOM renderer
+├── styles.css                 # Global css settings
+└── vite-env.d.ts              # Vite TS declaration file
+```
+
 ## Project Environment Setup:
 
-Mainly use [Vite](https://vitejs.dev/guide/why.html) tutorial. More detail steps listed [here](https://github.com/andy770921/react_vite_test_boilerplate).
+- [Vite](https://vitejs.dev/guide/) tutorial
+- More detail steps listed [here](https://github.com/andy770921/react_vite_test_boilerplate).
 
 ## Global State Schema:
 
