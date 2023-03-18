@@ -1,9 +1,8 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAtom, useAtomValue } from 'jotai';
-import { parseToRgb, rgba } from 'polished';
 import { elementsAtom, selectedElementIdAtom } from '../atoms';
-import { ElementProps } from '../interfaces';
+import BlockList from './BlockList';
 
 const CanvasWrapper = styled.div`
   position: relative;
@@ -11,31 +10,39 @@ const CanvasWrapper = styled.div`
   overflow: hidden;
 `;
 
-const Block = styled.div<ElementProps & { active: boolean }>`
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  left: ${(props) => props.x}px;
-  top: ${(props) => props.y}px;
-  background-color: ${(props) => rgba({ ...parseToRgb(props.color), alpha: props.o / 100 })};
-  outline: ${(props) => (props.active ? 4 : 0)}px solid #0274ff;
-  cursor: pointer;
-`;
-
 const Canvas: FC = () => {
   const elements = useAtomValue(elementsAtom);
   const [selectedElementId, setSelectedElementId] = useAtom(selectedElementIdAtom);
+  const handleBlockClick = useCallback(
+    (id: string) => {
+      setSelectedElementId(id);
+    },
+    [setSelectedElementId],
+  );
 
   return (
     <CanvasWrapper>
-      {elements.map(({ id, props }) => (
-        <Block
-          key={id}
-          {...props}
-          active={id === selectedElementId}
-          onClick={() => setSelectedElementId(id)}
-        />
-      ))}
+      <BlockList
+        elements={elements}
+        selectedElementId={selectedElementId}
+        onBlockClick={handleBlockClick}
+      />
+      {/* {elements.map(({ id, props, children }) => (
+        <Fragment key={id}>
+          <Block
+            {...props}
+            active={id === selectedElementId}
+            onClick={() => setSelectedElementId(id)}
+          />
+          {children.length ? (
+            <Block
+              {...children.props}
+              active={id === selectedElementId}
+              onClick={() => setSelectedElementId(id)}
+            />
+          ) : null}
+        </Fragment>
+      ))} */}
     </CanvasWrapper>
   );
 };

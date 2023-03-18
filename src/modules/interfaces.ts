@@ -15,7 +15,7 @@ export interface Element {
   pageId: string;
   name: string;
   props: ElementProps;
-  childElements: Element[];
+  children: Omit<Element, 'pageId'>[];
 }
 
 export interface IEditorConfig {

@@ -1,4 +1,4 @@
-import { FC, ChangeEvent, useCallback } from 'react';
+import { FC, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import ColorPicker from './ColorPicker';
@@ -17,15 +17,14 @@ const Label = styled.label`
 
 const RightPanel: FC = () => {
   const [{ x, y, o, color }, setSelectedElementProps] = useAtom(selectedElementPropsAtom);
-  const makeChangeHandler = useCallback(
+  const makeChangeHandler =
     (updatedKey: keyof ElementProps) => (e: ChangeEvent<HTMLInputElement>) => {
-      const updatedValue = e.target.type === 'number' ? e.target.valueAsNumber : e.target.value;
+      const updatedValue =
+        e.currentTarget.type === 'number' ? e.currentTarget.valueAsNumber : e.currentTarget.value;
       setSelectedElementProps({ [updatedKey]: updatedValue } as
         | Record<keyof Omit<ElementProps, 'color'>, number>
         | { color: string });
-    },
-    [setSelectedElementProps],
-  );
+    };
 
   return (
     <RightPanelWrapper>

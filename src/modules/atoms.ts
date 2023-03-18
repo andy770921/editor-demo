@@ -2,6 +2,7 @@ import { atom } from 'jotai';
 import { selectAtom } from 'jotai/utils';
 import { atomWithImmer } from 'jotai-immer';
 import set from 'lodash/set';
+import { flattenTree, findTreeIndexPath } from '../utils/array';
 import { ElementProps, Element, IEditorConfig } from './interfaces';
 
 const defaultElementProps: ElementProps = {
@@ -34,7 +35,31 @@ const defaultEditorConfig: IEditorConfig = {
         o: 100,
         color: '#008000',
       },
-      childElements: [],
+      children: [
+        {
+          id: 'element_uuid_m',
+          name: 'element 1-1',
+          props: {
+            x: 15,
+            y: 70,
+            o: 100,
+            color: '#A00000',
+          },
+          children: [
+            {
+              id: 'element_uuid_n',
+              name: 'element 1-1-1',
+              props: {
+                x: 20,
+                y: 100,
+                o: 80,
+                color: '#000080',
+              },
+              children: [],
+            },
+          ],
+        },
+      ],
     },
     {
       id: 'element_uuid_y',
@@ -46,7 +71,7 @@ const defaultEditorConfig: IEditorConfig = {
         o: 50,
         color: '#008000',
       },
-      childElements: [],
+      children: [],
     },
     {
       id: 'element_uuid_z',
@@ -58,7 +83,7 @@ const defaultEditorConfig: IEditorConfig = {
         o: 100,
         color: '#008000',
       },
-      childElements: [],
+      children: [],
     },
     {
       id: 'element_uuid_xx',
@@ -70,7 +95,7 @@ const defaultEditorConfig: IEditorConfig = {
         o: 100,
         color: '#008000',
       },
-      childElements: [],
+      children: [],
     },
     {
       id: 'element_uuid_yy',
@@ -82,7 +107,7 @@ const defaultEditorConfig: IEditorConfig = {
         o: 50,
         color: '#008000',
       },
-      childElements: [],
+      children: [],
     },
   ],
   selectedElementId: 'element_uuid_x',
@@ -128,22 +153,59 @@ export const resetSelectedElementIdAtom = atom(null, (_get, _set) => {
 export const selectedElementPropsAtom = atom(
   (_get) => {
     const selectedElementId = _get(editorConfigAtom).selectedElementId;
-    return (
-      _get(editorConfigAtom).elements.find(({ id }) => id === selectedElementId)?.props ??
-      defaultElementProps
+    const selectedElement = flattenTree(_get(editorConfigAtom).elements, 'children').find(
+      ({ id }) => id === selectedElementId,
     );
+
+    return selectedElement?.props ?? defaultElementProps;
   },
   (_get, _set, value: Record<keyof Omit<ElementProps, 'color'>, number> | { color: string }) => {
     _set(editorConfigAtom, (state) => {
+      const [propsKey, propsValue] = Object.entries(value)[0];
       const selectedElementId = _get(editorConfigAtom).selectedElementId;
-      const selectedElementIndex = _get(editorConfigAtom).elements.findIndex(
+      const selectedElementIndexList = findTreeIndexPath(
+        _get(editorConfigAtom).elements,
+        'children',
         ({ id }) => id === selectedElementId,
       );
 
-      const propsKey = Object.keys(value)[0];
-      const propsValue = Object.values(value)[0];
+      if (!selectedElementIndexList) return;
+      const pathSequence = selectedElementIndexList
+        .flatMap((index) => [index, 'children'])
+        .slice(0, -1);
 
-      set(state, ['elements', selectedElementIndex, 'props', propsKey], propsValue);
+      set(state, ['elements', ...pathSequence, 'props', propsKey], propsValue);
+    });
+  },
+);
+
+export const updatePageNameAtom = atom(
+  null,
+  (_get, _set, { pageId, pageName }: { pageId: string; pageName: string }) => {
+    const pageIndex = _get(editorConfigAtom).pages.findIndex(({ id }) => id === pageId);
+
+    _set(editorConfigAtom, (state) => {
+      set(state, ['pages', pageIndex, 'name'], pageName);
+    });
+  },
+);
+
+export const updateElementNameAtom = atom(
+  null,
+  (_get, _set, { elementId, elementName }: { elementId: string; elementName: string }) => {
+    const selectedElementIndexList = findTreeIndexPath(
+      _get(editorConfigAtom).elements,
+      'children',
+      ({ id }) => id === elementId,
+    );
+
+    if (!selectedElementIndexList) return;
+    const pathSequence = selectedElementIndexList
+      .flatMap((index) => [index, 'children'])
+      .slice(0, -1);
+
+    _set(editorConfigAtom, (state) => {
+      set(state, ['elements', ...pathSequence, 'name'], elementName);
     });
   },
 );

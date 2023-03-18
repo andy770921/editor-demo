@@ -1,38 +1,51 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { pagesAtom, selectedPageIdAtom, resetSelectedElementIdAtom } from '../atoms';
+import {
+  pagesAtom,
+  selectedPageIdAtom,
+  resetSelectedElementIdAtom,
+  updatePageNameAtom,
+} from '../atoms';
+import EditableList, { EditConfirmParams } from './EditableList';
 
 const PagesWrapper = styled.div`
   border-bottom: 1px solid;
   padding-bottom: 16px;
 `;
 
-const PageItem = styled.div`
-  cursor: pointer;
-`;
-
 const Pages: FC = () => {
   const pages = useAtomValue(pagesAtom);
   const [selectedPageId, setSelectedPageId] = useAtom(selectedPageIdAtom);
   const resetSelectedElementId = useSetAtom(resetSelectedElementIdAtom);
+  const updatePageName = useSetAtom(updatePageNameAtom);
 
-  const makeClickHandler = (pageId: string) => () => {
-    if (pageId === selectedPageId) {
-      return;
-    }
-    setSelectedPageId(pageId);
-    resetSelectedElementId();
-  };
+  const handleEditConfirm = useCallback(
+    ({ id, name }: EditConfirmParams) => {
+      updatePageName({ pageId: id, pageName: name });
+    },
+    [updatePageName],
+  );
+
+  const handleSingleClick = useCallback(
+    (pageId: string) => {
+      if (pageId !== selectedPageId) {
+        setSelectedPageId(pageId);
+        resetSelectedElementId();
+      }
+    },
+    [resetSelectedElementId, selectedPageId, setSelectedPageId],
+  );
 
   return (
     <PagesWrapper>
       <h4>Pages</h4>
-      {pages.map(({ id, name }) => (
-        <PageItem key={id} onClick={makeClickHandler(id)}>
-          {id === selectedPageId ? <strong>{name}</strong> : name}
-        </PageItem>
-      ))}
+      <EditableList
+        list={pages}
+        selectedId={selectedPageId}
+        onSingleClick={handleSingleClick}
+        onEditConfirm={handleEditConfirm}
+      />
     </PagesWrapper>
   );
 };
