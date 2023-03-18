@@ -7,7 +7,7 @@ https://editor-demo-sigma.vercel.app/
 ## Packages
 
 - [Vite](https://vitejs.dev/guide/why.html)
-- [jotai](https://jotai.org/)
+- [Jotai](https://jotai.org/)
 - [Styled Components](https://styled-components.com/)
 - [Polished](https://polished.js.org/docs/#installation)
 - [React DnD](https://react-dnd.github.io/react-dnd/docs/overview)
@@ -48,7 +48,7 @@ https://editor-demo-sigma.vercel.app/
 │    │    ├── hooks.ts
 │    │    └── index.tsx        # Root of all DnD exported items
 │    └──  testingLibrary
-│         └── index.tsx        # Global import for all test file
+│         └── index.ts         # Global import for all test file
 ├── utils                      # Utility functions
 │    ├── array.ts              # Array utility functions
 │    └── array.test.ts
