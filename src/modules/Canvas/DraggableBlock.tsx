@@ -1,8 +1,7 @@
 import { FC, HTMLProps } from 'react';
 import styled from 'styled-components';
 import { parseToRgb, rgba } from 'polished';
-import { useDrag } from 'react-dnd';
-import { DRAGGABLE_TYPE } from '../../services/reactDnd/constants';
+import { useDragBlock, DRAGGABLE_TYPE } from '../../services/reactDnd';
 import { ElementProps } from '../interfaces';
 
 const Block = styled.div<ElementProps & { active: boolean; isDragging: boolean }>`
@@ -19,18 +18,18 @@ const Block = styled.div<ElementProps & { active: boolean; isDragging: boolean }
 
 type DraggableBlockProps = ElementProps &
   Omit<HTMLProps<HTMLDivElement>, 'as'> & {
+    id: string;
     active: boolean;
   };
 
-const DraggableBlock: FC<DraggableBlockProps> = (props) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+const DraggableBlock: FC<DraggableBlockProps> = ({ id, ...blockProps }) => {
+  const { isDragging, dragRef } = useDragBlock({
+    id,
     type: DRAGGABLE_TYPE.BLOCK,
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
+    enabled: blockProps.active,
+  });
 
-  return <Block {...props} ref={drag} isDragging={isDragging} />;
+  return <Block {...blockProps} ref={dragRef} isDragging={isDragging} />;
 };
 
 export default DraggableBlock;

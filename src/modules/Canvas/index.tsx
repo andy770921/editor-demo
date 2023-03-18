@@ -1,10 +1,9 @@
 import { FC, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAtom, useAtomValue } from 'jotai';
-import { DRAGGABLE_TYPE } from '../../services/reactDnd/constants';
 import { elementsAtom, selectedElementIdAtom, selectedElementPropsAtom } from '../atoms';
 import BlockList from './BlockList';
-import { useDropUpdatePosition } from '../../services/reactDnd';
+import { useDropUpdatePosition, DRAGGABLE_TYPE } from '../../services/reactDnd';
 
 const CanvasWrapper = styled.div<{ isOverDroppableArea: boolean }>`
   position: relative;

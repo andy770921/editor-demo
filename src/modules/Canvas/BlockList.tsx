@@ -15,6 +15,7 @@ const BlockList: FC<BlockListProps> = ({ elements, selectedElementId, onBlockCli
         <Fragment key={id}>
           <DraggableBlock
             {...props}
+            id={id}
             active={id === selectedElementId}
             onClick={() => onBlockClick(id)}
           />

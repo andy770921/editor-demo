@@ -1,4 +1,4 @@
-import { useDrop } from 'react-dnd';
+import { useDrop, useDrag } from 'react-dnd';
 import { DRAGGABLE_TYPE } from './constants';
 import { ValueOf } from 'type-fest';
 
@@ -38,4 +38,26 @@ export const useDropUpdatePosition = ({
   );
 
   return { isOver, dropRef };
+};
+
+interface UseDragBlockParams {
+  id?: string | number;
+  type: ValueOf<typeof DRAGGABLE_TYPE>;
+  enabled: boolean;
+}
+
+export const useDragBlock = ({ id, type, enabled }: UseDragBlockParams) => {
+  const [{ isDragging }, dragRef] = useDrag(
+    () => ({
+      type,
+      canDrag: () => enabled,
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
+      ...(id ? { item: { id } } : {}),
+    }),
+    [enabled],
+  );
+
+  return { isDragging, dragRef };
 };
